@@ -5,11 +5,17 @@ import Main from './components/Main'
 import { Routes,Route } from "react-router"
 import Register from './components/Register'
 import Login from './components/Login'
+import AuthProvider from './AuthProvider'
+
+
+
+
 function App() {
 
 
   return (
     <>
+    <AuthProvider>
       <Header/>
       <Routes>
       <Route path='/' element={<Main/> } />
@@ -17,6 +23,7 @@ function App() {
       <Route path='/login' element={<Login/> } />
       </Routes>
       <Footer/>
+      </AuthProvider>
     </>
   )
 }
