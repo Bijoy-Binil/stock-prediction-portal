@@ -16,7 +16,7 @@ const Main = () => {
             ratione, iure et, modi deserunt reprehenderit excepturi a facilis
             sunt dicta? Dolores, ut sed.
           </p>
-          <Button class={"btn-outline-info"} url={"/login"} text={"Login"} />
+          <Button class={"btn-outline-info"} url={"/dashboard"} text={"Explore"} />
         
         </div>
       </div>

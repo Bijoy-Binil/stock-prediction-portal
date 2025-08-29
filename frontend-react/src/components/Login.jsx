@@ -16,7 +16,7 @@ const Login = () => {
 
 
   
-  console.log("isLoggedIn==> ",isLoggedIn)
+  console.log("LoginPage isLoggedIn==> ",isLoggedIn)
 
 
   const handleLogin = async (e) => {
@@ -35,7 +35,7 @@ const Login = () => {
       localStorage.setItem("refreshToken",response.data.refresh)
       console.log("Log in successfull");
       setIsLoggedIn(true)
-      navigate("/")
+      navigate("/dashboard")
     } catch (error) {
       setError("Invalid Credentials")
       

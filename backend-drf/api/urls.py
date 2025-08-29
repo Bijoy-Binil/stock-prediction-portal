@@ -8,6 +8,7 @@ urlpatterns = [
 
 
     path('register/',UserViews.RegisterView.as_view()),
+    path('protected-view/',UserViews.ProtectedView.as_view()),
     
     #Simple Jwt
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
