@@ -16,7 +16,7 @@ const Login = () => {
 
 
   
-  console.log("LoginPage isLoggedIn==> ",isLoggedIn)
+
 
 
   const handleLogin = async (e) => {
