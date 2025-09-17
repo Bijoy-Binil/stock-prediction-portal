@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use(
             config.headers['Authorization']=`Bearer ${accessToken}`
 
         }
-        console.log("Config==> ",config)
+   
         return config
     },(error)=>{
          return Promise.reject(error)  
@@ -29,7 +29,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     (response)=>{
-    console.log("Response 1==> ",response)
+ 
     return response 
 
 },async (error)=>{

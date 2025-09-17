@@ -21,15 +21,14 @@ const Register = () => {
         "http://127.0.0.1:8000/api/v1/register/",
         userData
       );
-      console.log("Response==>", response.data);
-      console.log("Registration successfull");
+
       setErrors({})
       setSuccess(true)
 
     } catch (error) {
-      console.log("error1==>", error.response.data);
+
         setErrors(error.response.data)
-        console.log("error2==>",errors)
+   
         
     }finally{
         setLoading(false)

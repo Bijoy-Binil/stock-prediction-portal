@@ -1,33 +1,114 @@
-
-import React, { useEffect } from 'react'
-import axiosInstance from '../../axiosInstance'
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../axiosInstance";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 const Dashboard = () => {
- 
-  
-  useEffect(()=>{
- const fetchProtectedData= async ()=>{
-try {
-  const response= await axiosInstance.get("/protected-view")
-  console.log("Success: ",response.data)
-} catch (error) {
-  console.error(`Error fecthing data: ${error}`)
-}
- }
- fetchProtectedData()
-  },[])
+  const [ticker, setTicker] = useState();
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [plot, setPlot] = useState();
+  const [ma100, setMa100] = useState();
+  const [ma200, setMa200] = useState();
+  const [finalPrediction, setFinalPrediction] = useState();
+  const [mse, setMse] = useState();
+  const [rmse, setRmse] = useState();
+  const [r2, setR2] = useState();
+
+  useEffect(() => {
+    const fetchProtectedData = async () => {
+      try {
+        const response = await axiosInstance.get("/protected-view");
+      } catch (error) {
+        console.error(`Error fecthing data: ${error}`);
+      }
+    };
+    fetchProtectedData();
+  }, [isLoading]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.post("/predict/", {
+        ticker: ticker,
+      });
+      console.log("Response==> ", response.data);
+      //setPlot
+      const backendRoot = import.meta.env.VITE_BACKEND_ROOT;
+      const plotUrl = `${backendRoot}${response.data.plot_img}`;
+      const ma100Url = `${backendRoot}${response.data.plot_100_dma}`;
+      const ma200Url = `${backendRoot}${response.data.plot_200_dma}`;
+      const finalPredictionUrl = `${backendRoot}${response.data.plot_prediction}`;
+      setPlot(plotUrl);
+      setMa100(ma100Url);
+      setMa200(ma200Url);
+      setFinalPrediction(finalPredictionUrl);
+      setMse(response.data.mse);
+      setRmse(response.data.rmse);
+      setR2(response.data.r2);
+      if (response.data.error) {
+        setError(response.data.error);
+      }
+    } catch (error) {
+      console.error("There was error making the API request", error);
+      console.log("Error==> ", error.data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <>
-       <div className="container ">
-         <div className="row justify-content-center">
-           <div className="col-md-6 bg-light-dark p-5 rounded">
-             <h3 className="text-light text-center mb-5">DashBoard</h3>
-           
-           </div>
-         </div>
-       </div>
-     </>
-  )
-}
+      <div className="container ">
+        <div className="row">
+          <div className="col-md-6 mx-auto">
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                required
+                onChange={(e) => setTicker(e.target.value)}
+                className="form-control "
+                placeholder="Enter stock Ticker"
+              />
 
-export default Dashboard
+              <small>{error && <div className="text-danger">{error}</div>}</small>
+              {isLoading && (
+                <button type="submit" disabled className="btn btn-info mt-3 ">
+                  {" "}
+                  <FontAwesomeIcon icon={faSpinner} spin /> Predicting
+                </button>
+              )}
+              {!isLoading && (
+                <button type="submit" className="btn btn-info mt-3 ">
+                  {" "}
+                  See Prediction
+                </button>
+              )}
+            </form>
+          </div>
+          {/* print prediction plot */}
+          {finalPrediction && (
+            <div className="prediction mt-5">
+              <div className="p-3">{plot && <img src={plot} style={{ maxWidth: "100%" }} alt="" />}</div>
+              <div className="p-3">{ma100 && <img src={ma100} style={{ maxWidth: "100%" }} alt="" />}</div>
+              <div className="p-3">{ma200 && <img src={ma200} style={{ maxWidth: "100%" }} alt="" />}</div>
+              <div className="p-3">
+                {finalPrediction && <img src={finalPrediction} style={{ maxWidth: "100%" }} alt="" />}
+              </div>
+
+              <div className="text-light p-3">
+                <h4>Model Evaluation</h4>
+                <p>Mean Squared Error (MSE): {mse}</p>
+                <p>Root Mean Squared Error (RMSE): {rmse}</p>
+                <p>R-Squared: {r2}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Dashboard;

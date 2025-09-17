@@ -24,7 +24,7 @@ const Login = () => {
 
     setLoading(true);
     const userData = { username, password };
-    console.log("userData==>", userData);
+
 
     try {
       const response = await axios.post(
@@ -33,7 +33,7 @@ const Login = () => {
       );
       localStorage.setItem("accessToken",response.data.access)
       localStorage.setItem("refreshToken",response.data.refresh)
-      console.log("Log in successfull");
+
       setIsLoggedIn(true)
       navigate("/dashboard")
     } catch (error) {

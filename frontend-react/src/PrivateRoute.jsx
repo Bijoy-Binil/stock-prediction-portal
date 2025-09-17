@@ -4,7 +4,6 @@ import { AuthContext } from './AuthProvider'
 
 const PrivateRoute = ({children}) => {
     const {isLoggedIn}=useContext(AuthContext)
-console.log("PrivateRoute==>",isLoggedIn)
   return isLoggedIn?children:<Navigate to="/login" />
 }
 
